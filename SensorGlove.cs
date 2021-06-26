@@ -1,4 +1,8 @@
-﻿using SensorhandSDK.ANN;
+﻿/// <author>
+/// Jan Buenker
+/// <author>
+
+using SensorhandSDK.ANN;
 using System;
 using System.Collections.Generic;
 using System.Linq;

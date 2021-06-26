@@ -1,4 +1,8 @@
-﻿using System;
+﻿/// <author>
+/// Jan Buenker
+/// <author>
+
+using System;
 using System.Collections.Generic;
 using System.IO.Ports;
 using System.Linq;
@@ -45,7 +49,7 @@ namespace SensorhandSDK
             {
                 while (this.serialPort.ReadByte() != SensorDataSource.PacketStart) ;
 
-                //Trennzeichen wurfe bereits gelesen und verworfen - schreibe den Inhalt des Pakets ab Stelle 1 in den Buffer
+                // Separator was already read and discarded, so write the contents from index 1 onwards to the buffer
                 read++;
             }
 
@@ -60,12 +64,11 @@ namespace SensorhandSDK
             bool synchronized = false;
 
             var packetSize = ((SensorDataSource.SensorCount * SensorDataSource.BytesPerSensor) + 1);
-            //Buffer für zwei Pakete
+            // Buffer for two packets
             var bytes = new byte[packetSize * 2];
             int read = 0;
             while (true)
             {
-                //Offset im Buffer, bei dem mit dem Parsen angefangen wird
                 var parseOffset = 1;
                 lock (this.serialLock)
                 {
@@ -90,14 +93,13 @@ namespace SensorhandSDK
 
                         if (read > packetSize && read < bytes.Length)
                         {
-                            //Es wurde mehr als ein Paket empfangen, aber noch kein zweites komplett
-                            //=> Verarbeite das erste Paket, verwirf alle weiteren Daten um beim nächsten Mal ein aktuelles Paket zu bekommen
+                            // We received more than one packet, but not a full second packet
 
+                            // Process the first packet, discard further data to get an up-to-date packet next time
                             //this.serialPort.DiscardInBuffer();
                             //synchronized = false;
 
-
-                            //Korrektur: Verwirf NICHT alle weiteren Daten
+                            // Correction: do NOT discard all further data
                             read = read - packetSize;
                             for (int i = 0; i < read; i++)
                             {
@@ -106,10 +108,9 @@ namespace SensorhandSDK
                         }
                         else if (read == bytes.Length)
                         {
-                            //Es wurden 2 Pakete vollstaendig empfangen, es koennte noch mehr im Buffer liegen
-                            //=> Verarbeite das zweite Paket und verwirf den restlichen Buffer, um im naechsten Schritt wieder aktuell zu sein
-
-                            //Console.WriteLine("DISCARD");
+                            // 2 full packets were received, more could be in the buffer
+                            
+                            // Process the second packet and discard the remaining buffer, to get an up-to-date packet next time
                             parseOffset += packetSize;
                             read = 0;
                             this.serialPort.DiscardInBuffer();
@@ -117,7 +118,7 @@ namespace SensorhandSDK
                         }
                         else// if (read == packetSize)
                             read = 0;
-                        //else if (read < packetSize) ist nicht moeglich
+                        //else if (read < packetSize) is impossible
                     }
                     else
                     {
@@ -136,7 +137,7 @@ namespace SensorhandSDK
             }
         }
 
-        //Lockt nicht
+        // Does not lock
         private void doDispose()
         {
             if (this.serialPort != null)
@@ -212,13 +213,12 @@ namespace SensorhandSDK
             }
         }
 
-        // Sucht automatisch den Port
+        // Automatically detects the serial port
         public override void Connect()
         {
             if (this.Connected)
                 throw new Exception("SensorGlove is already connected");
 
-            //this.Connect("COM3");
             var portOptions = SerialPort.GetPortNames();
             foreach (var port in portOptions)
             {

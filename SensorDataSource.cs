@@ -1,4 +1,8 @@
-﻿using System;
+﻿/// <author>
+/// Jan Buenker
+/// <author>
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -38,7 +42,7 @@ namespace SensorhandSDK
 
 
         public abstract event EventHandler<SensorDataEventArgs> OnSensorDataUpdate;
-        public abstract event EventHandler OnDisconnected; //SensorDataSource gilt als getrennt, wenn keine Daten mehr gelesen werden koennen (Arduino nicht mehr angeschlossen, Datei zuende, ...)
+        public abstract event EventHandler OnDisconnected; //SensorDataSource is disconnected, when no more data can be sent (arduino disconnected, eof reached, ...)
         public abstract event EventHandler<SensorErrorEventArgs> OnError;
 
         public virtual bool Connected { get; protected set; }

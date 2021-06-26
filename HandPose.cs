@@ -1,4 +1,8 @@
-﻿using System;
+﻿/// <author>
+/// Jan Buenker
+/// <author>
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -7,7 +11,7 @@ using System.Text;
 namespace SensorhandSDK
 {
     /// <summary>
-    /// Winkel eines Fingers in Grad
+    /// Angles of a finger in degrees
     /// </summary>
     [DataContract(Namespace="")]
     public class FingerAngles
@@ -23,6 +27,9 @@ namespace SensorhandSDK
         public float Side { get; set; }
     }
 
+    /// <summary>
+    /// Angles of the thumb in degrees
+    /// <summary>
     [DataContract(Namespace = "")]
     public class ThumbAngles
     {
@@ -39,7 +46,7 @@ namespace SensorhandSDK
     }
 
     /// <summary>
-    /// Winkel einer Hand in Grad
+    /// Angles of the hand in degrees
     /// </summary>
     [DataContract(Namespace = "")]
     public class HandPose
@@ -101,7 +108,7 @@ namespace SensorhandSDK
         public void SetRawAngles(float[] rawAngles, bool? skipCalculatableAngles = null)
         {
             if (rawAngles == null || (rawAngles.Length != 16 && rawAngles.Length != 21))
-                throw new Exception("rawAngles Parameter ungueltig");
+                throw new Exception("Invalid rawAngles");
 
             bool doSkipCalculatableAngles;
             if (skipCalculatableAngles.HasValue)
